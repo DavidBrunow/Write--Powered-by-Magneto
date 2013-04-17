@@ -29,9 +29,10 @@
 		2398C873171E53CF00A5D8A8 /* Write-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Write-Prefix.pch"; sourceTree = "<group>"; };
 		2398C874171E53CF00A5D8A8 /* DHBAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DHBAppDelegate.h; sourceTree = "<group>"; };
 		2398C875171E53CF00A5D8A8 /* DHBAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DHBAppDelegate.m; sourceTree = "<group>"; };
-		2398C877171E53CF00A5D8A8 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
-		2398C879171E53CF00A5D8A8 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
-		2398C87B171E53CF00A5D8A8 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
+		2398C877171E53CF00A5D8A8 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Default.png; path = Write/Assets/Default.png; sourceTree = SOURCE_ROOT; };
+		2398C879171E53CF00A5D8A8 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default@2x.png"; path = "Write/Assets/Default@2x.png"; sourceTree = SOURCE_ROOT; };
+		2398C87B171E53CF00A5D8A8 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-568h@2x.png"; path = "Write/Assets/Default-568h@2x.png"; sourceTree = SOURCE_ROOT; };
+		2398C884171E54D300A5D8A8 /* Credentials.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Credentials.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -78,8 +79,8 @@
 		2398C86B171E53CF00A5D8A8 /* Write */ = {
 			isa = PBXGroup;
 			children = (
-				2398C874171E53CF00A5D8A8 /* DHBAppDelegate.h */,
-				2398C875171E53CF00A5D8A8 /* DHBAppDelegate.m */,
+				2398C883171E545000A5D8A8 /* Assets */,
+				2398C882171E53D800A5D8A8 /* Classes */,
 				2398C86C171E53CF00A5D8A8 /* Supporting Files */,
 			);
 			path = Write;
@@ -92,11 +93,28 @@
 				2398C86E171E53CF00A5D8A8 /* InfoPlist.strings */,
 				2398C871171E53CF00A5D8A8 /* main.m */,
 				2398C873171E53CF00A5D8A8 /* Write-Prefix.pch */,
+			);
+			path = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		2398C882171E53D800A5D8A8 /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				2398C874171E53CF00A5D8A8 /* DHBAppDelegate.h */,
+				2398C875171E53CF00A5D8A8 /* DHBAppDelegate.m */,
+				2398C884171E54D300A5D8A8 /* Credentials.h */,
+			);
+			path = Classes;
+			sourceTree = "<group>";
+		};
+		2398C883171E545000A5D8A8 /* Assets */ = {
+			isa = PBXGroup;
+			children = (
 				2398C877171E53CF00A5D8A8 /* Default.png */,
 				2398C879171E53CF00A5D8A8 /* Default@2x.png */,
 				2398C87B171E53CF00A5D8A8 /* Default-568h@2x.png */,
 			);
-			name = "Supporting Files";
+			path = Assets;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
