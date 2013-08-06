@@ -43,6 +43,36 @@
     return self;
 }
 
+-(id) initLocalMediaWithTitle:(NSString *)title
+{
+    DHBAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask, YES);
+    NSString *documentsPath = [paths objectAtIndex:0];
+    
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    [formatter setDateFormat:@"yyyy"];
+    
+    NSString *currentYear = [formatter stringFromDate:[NSDate date]];
+    
+    [formatter setDateFormat:@"MM"];
+    NSString *currentMonth = [formatter stringFromDate:[NSDate date]];
+    
+    DHBBlog *currentBlog = [appDelegate.settings.blogs objectAtIndex:appDelegate.settings.selectedBlog];
+    
+    [self setLocalPath:[NSString stringWithFormat:@"%@%@items/media/%@/%@/", documentsPath, currentBlog.path, currentYear, currentMonth]];
+    
+    return self;
+}
+
+-(void) deleteLocalMedia
+{
+    NSFileManager *fileManager = [[NSFileManager alloc] init];
+    fileManager = [NSFileManager defaultManager];
+    
+    [fileManager removeItemAtPath:self.localPath error:nil];
+}
+
 -(void) saveWithMedia:(id) media
 {
     DHBAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
@@ -59,9 +89,7 @@
     
     NSFileManager *fileManager = [[NSFileManager alloc] init];
     fileManager = [NSFileManager defaultManager];
-    
-    NSLog(@"Media Local Path: %@", self.localPath);
-    
+        
     if(![fileManager fileExistsAtPath:self.localPath]) {
         [fileManager createDirectoryAtPath:self.localPath withIntermediateDirectories:YES attributes:nil error:nil];
     }

@@ -69,13 +69,12 @@
     for(DHBBlog *blog in self.allBlogs) {
         [blog downloadDropboxFiles];
     }
-    NSLog(@"Selected Blog: %d, Is initial launch: %d", appDelegate.settings.selectedBlog, appDelegate.settings.isInitialLaunch);
+
     if(appDelegate.settings.isInitialLaunch && appDelegate.settings.selectedBlog != -1) {
         NSIndexPath *selectedPath = [NSIndexPath indexPathForRow:appDelegate.settings.selectedBlog inSection:0];
         
         [self tableView:self.blogsTableView didSelectRowAtIndexPath:selectedPath];
         [appDelegate.settings setIsInitialLaunch:NO];
-        NSLog(@"Setting initial launch to no here");
     }
 }
 

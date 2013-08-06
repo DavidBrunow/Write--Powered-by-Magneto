@@ -12,6 +12,7 @@
 #import "SimpleKeychain.h"
 #import "DHBBlog.h"
 #import "DHBBlogPost.h"
+#import "DHBMedia.h"
 #import "DHBNotificationView.h"
 
 @implementation DHBDropBox 
@@ -117,24 +118,31 @@
 - (void)restClient:(DBRestClient *)client uploadedFile:(NSString *)destPath from:(NSString *)srcPath metadata:(DBMetadata *)metadata
 {
     DHBAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
-    bool isMedia = true;
-    
+
     for (DHBBlog *blog in appDelegate.settings.blogs) {
         for (DHBBlogPost *post in blog.posts) {
             if([post.title isEqualToString:metadata.filename]) {
-                [post setRev:metadata.rev];
-                isMedia = false;
+                if([post.rev isEqualToString:metadata.rev]) {
+                    //If I'm thinking about this correctly, then this should only happen when the uploaded file is the same as the local file. Otherwise, there would be a new rev
+                    [post deleteLocalPost];
+                } else {
+                    [post setRev:metadata.rev];
+                }
             } else {
             }
         }
     }
     
-    if(isMedia && [metadata.filename rangeOfString:@"md"].location == NSNotFound) {
+    if([metadata.filename rangeOfString:@"md"].location == NSNotFound) {
         DHBNotificationView *uploadNotification = [[DHBNotificationView alloc] initWithFrame:CGRectZero];
         [uploadNotification.notificationLabel setText:@"Media Uploaded!"];
         uploadNotification.screen = [UIScreen mainScreen];
         
         [uploadNotification displayNotification];
+        
+        DHBMedia *mediaToDeleteLocally = [[DHBMedia alloc] initLocalMediaWithTitle:metadata.filename];
+        
+        [mediaToDeleteLocally deleteLocalMedia];
     }
     
     NSLog(@"The file %@ has been uploaded", metadata.filename);
@@ -178,12 +186,31 @@
     if(client == self.downloadClient) {
         NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask, YES);
         NSString *documentsPath = [paths objectAtIndex:0];
-        int numberOfPosts = 0;
+        int numberOfPosts = -1;
         
         if (metadata.isDirectory) {
-            for (DBMetadata *file in metadata.contents) {
+            
+            NSArray *sortedMetadataContents = [[NSArray alloc] initWithArray:metadata.contents];
+            
+            sortedMetadataContents = [sortedMetadataContents sortedArrayUsingComparator: ^(DBMetadata *obj1, DBMetadata *obj2) {
+                if([obj1.clientMtime earlierDate:obj2.clientMtime] == obj2.clientMtime) {
+                    return (NSComparisonResult) NSOrderedAscending;
+                } else if ([obj1.clientMtime isEqualToDate:obj2.clientMtime]) {
+                    return (NSComparisonResult) NSOrderedSame;
+                } else {
+                    return (NSComparisonResult) NSOrderedDescending;
+                }
+            }];
+            
+            NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+            
+            [formatter setDateFormat:@"yyyy"];
+            NSString *thisYear = [formatter stringFromDate:[NSDate date]];
+            
+            for (DBMetadata *file in sortedMetadataContents) {
                 if([file isDirectory]) {
-                    if([file.filename isEqualToString:@"drafts"] || [file.filename isEqualToString:@"items"] || [file.filename isEqualToString:@"2012"] || [file.filename isEqualToString:@"2013"]) {
+                    //Show everything in the drafts folder, but only the posts from this year
+                    if([file.filename isEqualToString:@"drafts"] || [file.filename isEqualToString:@"items"] || [file.filename isEqualToString:thisYear]) {
                         [self.downloadClient loadMetadata:file.path];
                     }
                 } else {
@@ -211,14 +238,23 @@
                         if([fileManager fileExistsAtPath:post.localPath]) {
                             NSDate *localModifiedDate = [[fileManager attributesOfItemAtPath:post.localPath error:nil] objectForKey:NSFileModificationDate];
                             
-                            if([localModifiedDate earlierDate:file.lastModifiedDate] == file.lastModifiedDate) {
+                            if([localModifiedDate earlierDate:file.clientMtime] == file.clientMtime) {
                                 //if the file modified date is more recent, then update the dropbox copy with the new rev
+                                NSLog(@"File: %@; Local Modified Date: %@, Dropbox Modified Date: %@", post.title, localModifiedDate, file.clientMtime);
                                 [self.uploadClient uploadFile:post.title toPath:post.dropBoxPath withParentRev:post.rev fromPath:post.localPath];
-                            } else if([localModifiedDate isEqualToDate:file.lastModifiedDate]) {
+                            } else if([localModifiedDate isEqualToDate:file.clientMtime]) {
                                 //delete the local copies of ones that match so the local filesystem doesnt get out of control
                                 [fileManager removeItemAtPath:post.localPath error:nil];
                             } else {
-                                //otherwise, update the dropbox copy with a rev of nil so that a conflicted copy is created
+                                //otherwise, change the filename and upload to Dropbox as a conflicted copy
+                                NSString *newTitle = [post.title stringByReplacingOccurrencesOfString:@".md" withString:[NSString stringWithFormat:@"%@_Conflicted_by_Write_%@.md", post.title, [NSDate date]]];
+                                NSString *newLocalPath = [post.localPath stringByReplacingOccurrencesOfString:post.title withString:newTitle];
+
+                                [fileManager moveItemAtPath:post.localPath toPath:newLocalPath error:nil];
+                                
+                                [post setLocalPath:newLocalPath];
+                                [post setTitle:newTitle];
+                                
                                 [self.uploadClient uploadFile:post.title toPath:post.dropBoxPath withParentRev:nil fromPath:post.localPath];
                             }
                         }
@@ -233,7 +269,7 @@
                         }
                         
                         DHBBlog *blog = [appDelegate.settings.blogs objectAtIndex:blogIndex];
-                        
+                        //Don't duplicate posts, and don't allow more than 10 posts
                         if(![blog.posts containsObject:post] && ((post.isDraft == NO && numberOfPosts < 10) || post.isDraft == YES)) {
                             [blog.posts insertObject:post atIndex:blog.posts.count];
                         }

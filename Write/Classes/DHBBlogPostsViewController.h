@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "DHBBlogPost.h"
 
-@interface DHBBlogPostsViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
+@interface DHBBlogPostsViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate>
 
 @property (nonatomic, retain) UITableView *blogPostsTableView;
 @property (nonatomic, retain) UISegmentedControl *segmentedControl;

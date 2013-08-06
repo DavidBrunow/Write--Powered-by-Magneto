@@ -20,6 +20,7 @@
 @property (nonatomic, strong) UIImagePickerController *imagePickerController;
 @property (nonatomic) float keyboardHeight;
 @property (nonatomic, retain) NSTimer *globalTimer;
+@property (nonatomic, retain) NSTimer *saveLocallyTimer;
 @property (nonatomic, retain) DHBNotificationView *postNotification;
 @property (nonatomic) CGSize kbSize;
 @property (nonatomic, retain) DHBMedia *blogPostMedia;
@@ -80,13 +81,22 @@
     [self.view addSubview:self.editBlogPost];
 }
 
+-(void) saveLocally
+{
+    [self.blogPost saveLocallyWithContents:self.editBlogPost.text];
+}
+
 -(void)viewDidAppear:(BOOL)animated
 {
 }
 
 -(void)viewWillDisappear:(BOOL)animated
 {
-
+    if(self.saveLocallyTimer) {
+        [self.saveLocallyTimer invalidate];
+        self.saveLocallyTimer = nil;
+    }
+    
     if(self.blogPost.isDraft && self.editBlogPost.text.length > 0) {
         [self savePost];
     }
@@ -160,6 +170,10 @@
 
 - (void)textViewDidChange:(UITextView *)textView
 {
+    if(!self.saveLocallyTimer || ![self.saveLocallyTimer isValid]) {
+        self.saveLocallyTimer = [NSTimer scheduledTimerWithTimeInterval:5.0 target:self selector:@selector(saveLocally) userInfo:nil repeats:YES];
+    }
+
     [textView scrollRangeToVisible:[textView selectedRange]];
     if ([self.editBlogPost caretRectForPosition:self.editBlogPost.selectedTextRange.start].origin.y > [self.editBlogPost caretRectForPosition:self.editBlogPost.endOfDocument].origin.y - self.kbSize.height &&  [self.editBlogPost caretRectForPosition:self.editBlogPost.endOfDocument].origin.y - self.kbSize.height > 0) {
         CGPoint scrollPoint = CGPointMake(0.0, [self.editBlogPost caretRectForPosition:self.editBlogPost.endOfDocument].origin.y + [self.editBlogPost caretRectForPosition:self.editBlogPost.endOfDocument].size.height + self.editBlogPost.inputAccessoryView.frame.size.height - self.kbSize.height);
@@ -167,6 +181,14 @@
             self.editBlogPost.contentOffset = scrollPoint;
         }];
         //[self.editBlogPost setContentOffset:scrollPoint animated:NO];
+    }
+}
+
+- (void)textViewDidEndEditing:(UITextView *)textView
+{
+    if(self.saveLocallyTimer) {
+        [self.saveLocallyTimer invalidate];
+        self.saveLocallyTimer = nil;
     }
 }
 
@@ -220,14 +242,16 @@
     
     if(self.imageTitleView == nil) {
         self.imageTitleView = [[DHBTitleView alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-        [self.imageTitleView.lblTitle setText:@"Alternate Text:"];
-        if (CFStringCompare ((CFStringRef) mediaType, kUTTypeImage, 0) == kCFCompareEqualTo) {
-            [self.imageTitleView.btnFinish setTitle:@"Add Image" forState:UIControlStateNormal];
-        } else {
-            [self.imageTitleView.btnFinish setTitle:@"Add Video" forState:UIControlStateNormal];
-        }
-        [self.imageTitleView.btnFinish addTarget:self.imageTitleView action:@selector(createMedia) forControlEvents:UIControlEventTouchUpInside];
     }
+    
+    [self.imageTitleView.lblTitle setText:@"Alternate Text:"];
+    [self.imageTitleView.txtTitle setText:@""];
+    if (CFStringCompare ((CFStringRef) mediaType, kUTTypeImage, 0) == kCFCompareEqualTo) {
+        [self.imageTitleView.btnFinish setTitle:@"Add Image" forState:UIControlStateNormal];
+    } else {
+        [self.imageTitleView.btnFinish setTitle:@"Add Video" forState:UIControlStateNormal];
+    }
+    [self.imageTitleView.btnFinish addTarget:self.imageTitleView action:@selector(createMedia) forControlEvents:UIControlEventTouchUpInside];
     
     [self.imageTitleView setParentViewController:self];
     
@@ -276,14 +300,10 @@
     }
     
     [self.imageTitleView removeFromSuperview];
-
-    //[self.navigationController popViewControllerAnimated:YES];
 }
 
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
 {
-    NSLog(@"Canceling image picker");
-    
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 

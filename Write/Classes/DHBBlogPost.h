@@ -24,7 +24,9 @@
 
 -(id) initWithLocalPath:(NSString *) path;
 -(void) saveWithContents:(NSString *) contents;
+-(BOOL) saveLocallyWithContents:(NSString *) contents;
 -(void) postDraftWithContents:(NSString *)contents;
 -(void) downloadDropboxFile;
+-(void) deleteLocalPost;
 
 @end

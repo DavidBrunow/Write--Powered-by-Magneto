@@ -32,6 +32,7 @@
     //[lblPostTitle setText:@"Title:"];
     
     [self.txtTitle setBorderStyle:UITextBorderStyleLine];
+    [self.txtTitle setText:@""];
     
     [self.btnFinish setFrame:CGRectMake(self.frame.size.width - 150, 170, 150, 30)];
     

@@ -18,6 +18,7 @@
 @property (nonatomic, retain) DHBTitleView *postTitleView;
 @property (nonatomic, strong) DHBPostEditViewController *editViewController;
 @property (nonatomic, strong) DHBBlog *currentBlog;
+@property (nonatomic, strong) UISearchBar *searchBar;
 
 @end
 
@@ -135,6 +136,26 @@
 {
     self.title = [segmentedControl titleForSegmentAtIndex:segmentedControl.selectedSegmentIndex];
     [self.blogPostsTableView reloadData];
+    
+    //Search cut from the initial release, will be considered later
+    /*
+    if(segmentedControl.selectedSegmentIndex == 1) {
+        if(self.searchBar == nil) {
+            self.searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 0, 320, 44)];
+        }
+        
+        self.searchBar.delegate = self;
+        
+        self.blogPostsTableView.tableHeaderView = self.searchBar;
+    } else {
+        self.blogPostsTableView.tableHeaderView = nil;
+    }
+     */
+}
+
+-(void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText
+{
+    
 }
 
 - (void)didReceiveMemoryWarning

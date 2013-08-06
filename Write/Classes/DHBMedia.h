@@ -21,6 +21,8 @@
 @property (nonatomic) bool isUploaded;
 
 -(id) initWithTitle:(NSString *) title andMedia:(id) media andBlog:(DHBBlog *) blog;
+-(id) initLocalMediaWithTitle:(NSString *) title;
 -(void) saveWithMedia:(id) media;
+-(void) deleteLocalMedia;
 
 @end

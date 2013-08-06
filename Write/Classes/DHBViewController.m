@@ -22,7 +22,6 @@
 	// Do any additional setup after loading the view.
     CGRect tableViewFrame = [[UIScreen mainScreen] bounds];
     //if ([self.navigationController isNavigationBarHidden]) {
-    tableViewFrame.size.height = [[UIScreen mainScreen] bounds].size.height + self.navigationController.navigationBar.frame.size.height;
     tableViewFrame.origin.y += 60;
     
     NSLog(@"Nav Bar Height: %f", self.navigationController.navigationBar.frame.size.height);
@@ -32,6 +31,9 @@
     //}
     
     [self.view setFrame:tableViewFrame];
+    
+    tableViewFrame.size.height = [[UIScreen mainScreen] bounds].size.height + self.navigationController.navigationBar.frame.size.height - 130;
+
     self.blogsTableView = [[UITableView alloc] initWithFrame:tableViewFrame style:UITableViewStyleGrouped];
     
     [self.blogsTableView setBackgroundColor:[UIColor clearColor]];
@@ -55,7 +57,7 @@
     
     [self.cancelButton setFrame:CGRectMake(self.view.frame.size.width - 300, self.view.frame.size.height - 100, 80, 40)];
     
-    DHBSignatureView *signature = [[DHBSignatureView alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height - 150, self.view.frame.size.width, 150)];
+    DHBSignatureView *signature = [[DHBSignatureView alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height - 130, self.view.frame.size.width, 130)];
     
     [self.view addSubview:signature];
     

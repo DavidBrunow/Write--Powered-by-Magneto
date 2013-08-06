@@ -29,16 +29,29 @@
 {
     DHBAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
 
+    if([self saveLocallyWithContents:contents]) {
+        [appDelegate.dropBox.uploadClient loadMetadata:[NSString stringWithFormat:@"%@/%@", self.dropBoxPath, self.title]];
+    
+        [appDelegate.dropBox.uploadClient uploadFile:self.title toPath:self.dropBoxPath withParentRev:self.rev fromPath:self.localPath];
+    }
+}
+
+-(void) deleteLocalPost
+{
+    NSFileManager *fileManager = [[NSFileManager alloc] init];
+    fileManager = [NSFileManager defaultManager];
+    
+    [fileManager removeItemAtPath:self.localPath error:nil];
+}
+
+-(BOOL) saveLocallyWithContents:(NSString *)contents
+{
     NSData *dataBuffer = [[NSData alloc] init];
     NSFileManager *fileManager = [[NSFileManager alloc] init];
     fileManager = [NSFileManager defaultManager];
     
     dataBuffer = [contents dataUsingEncoding:NSUTF8StringEncoding];
-    [fileManager createFileAtPath:self.localPath contents:dataBuffer attributes:nil];
-    
-    [appDelegate.dropBox.uploadClient loadMetadata:[NSString stringWithFormat:@"%@/%@", self.dropBoxPath, self.title]];
-    
-    [appDelegate.dropBox.uploadClient uploadFile:self.title toPath:self.dropBoxPath withParentRev:self.rev fromPath:self.localPath];
+    return [fileManager createFileAtPath:self.localPath contents:dataBuffer attributes:nil];
 }
 
 -(void)downloadDropboxFile
