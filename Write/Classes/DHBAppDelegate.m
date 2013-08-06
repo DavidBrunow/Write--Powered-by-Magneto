@@ -7,6 +7,9 @@
 //
 
 #import "DHBAppDelegate.h"
+#import "DHBRootNavController.h"
+#import "SimpleKeychain.h"
+#import "DHBCredentials.h"
 
 @implementation DHBAppDelegate
 
@@ -14,8 +17,18 @@
 {
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
+    
+    self.settings = [[DHBSettings alloc] init];
+    
+    self.dropBox = [[DHBDropBox alloc] init];
+    
+    self.rootNavController = [[DHBRootNavController alloc] init];
+    
+    [self.window setRootViewController:self.rootNavController];
+    
     self.window.backgroundColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];
+    
     return YES;
 }
 
@@ -44,6 +57,38 @@
 - (void)applicationWillTerminate:(UIApplication *)application
 {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+}
+
+- (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url {
+    if ([[DBSession sharedSession] handleOpenURL:url]) {
+        if ([[DBSession sharedSession] isLinked]) {
+            NSLog(@"App linked successfully!");
+            NSArray *queryParameters = [url.query componentsSeparatedByString:@"&"];
+            NSString *oauthToken = @"";
+            NSString *oauthTokenSecret = @"";
+            NSString *userID = @"";
+            
+            for(NSString *queryParameter in queryParameters) {
+                if([[[queryParameter componentsSeparatedByString:@"="] objectAtIndex:0] isEqualToString:@"oauth_token"]) {
+                    oauthToken = [[queryParameter componentsSeparatedByString:@"="] objectAtIndex:1];
+                } else if([[[queryParameter componentsSeparatedByString:@"="] objectAtIndex:0] isEqualToString:@"oauth_token_secret"]) {
+                    oauthTokenSecret = [[queryParameter componentsSeparatedByString:@"="] objectAtIndex:1];
+                } else if([[[queryParameter componentsSeparatedByString:@"="] objectAtIndex:0] isEqualToString:@"uid"]) {
+                    userID = [[queryParameter componentsSeparatedByString:@"="] objectAtIndex:1];
+                }
+            }
+            
+            NSLog(@"Token: %@. Secret: %@. UserID: %@", oauthToken, oauthTokenSecret, userID);
+            bool success = [SFHFKeychainUtils storeUsername:USER_NAME_TOKEN andPassword:oauthToken forServiceName:SERVICE_NAME updateExisting:TRUE error:nil];
+            success = [SFHFKeychainUtils storeUsername:USER_NAME_TOKEN_SECRET andPassword:oauthTokenSecret forServiceName:SERVICE_NAME updateExisting:TRUE error:nil];
+            success = [SFHFKeychainUtils storeUsername:USER_NAME_USER_NAME andPassword:userID forServiceName:SERVICE_NAME updateExisting:TRUE error:nil];
+
+            // At this point you can start making API calls
+        }
+        return YES;
+    }
+    // Add whatever other url handling code your app requires here
+    return NO;
 }
 
 @end
