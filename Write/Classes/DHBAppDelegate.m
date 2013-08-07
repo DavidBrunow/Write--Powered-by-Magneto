@@ -9,7 +9,7 @@
 #import "DHBAppDelegate.h"
 #import "DHBRootNavController.h"
 #import "SimpleKeychain.h"
-#import "DHBCredentials.h"
+#import "Credentials.h"
 
 @implementation DHBAppDelegate
 

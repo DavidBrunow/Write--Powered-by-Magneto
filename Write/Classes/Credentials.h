@@ -1,13 +1,13 @@
 //
-//  DHBCredentials.h
+//  Credentials.h
 //  Write
 //
 //  Created by David Brunow on 4/16/13.
 //
 //
 
-#ifndef Write_DHBCredentials_h
-#define Write_DHBCredentials_h
+#ifndef Write_Credentials_h
+#define Write_Credentials_h
 
 #define CONSUMER_KEY @"vwp1hxrxrbwgjip"
 #define CONSUMER_SECRET @"r1mzmd4xlold9hy"

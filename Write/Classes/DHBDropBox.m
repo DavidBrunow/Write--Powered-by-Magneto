@@ -8,7 +8,7 @@
 
 #import "DHBDropBox.h"
 #import "DHBAppDelegate.h"
-#import "DHBCredentials.h"
+#import "Credentials.h"
 #import "SimpleKeychain.h"
 #import "DHBBlog.h"
 #import "DHBBlogPost.h"
