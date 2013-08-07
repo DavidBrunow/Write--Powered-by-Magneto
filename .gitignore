@@ -1,5 +1,26 @@
+<<<<<<< HEAD
 /Write/Classes/Credentials.h
 /Write.xcodeproj/project.xcworkspace/xcuserdata/davidhbrunow.xcuserdatad/UserInterfaceState.xcuserstate
 /Write.xcodeproj/xcuserdata/davidhbrunow.xcuserdatad/xcdebugger/
 /Write.xcodeproj/project.pbxproj
 Write/Classes/Credentials.h
+=======
+# Xcode
+.DS_Store
+build/
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+*.xcworkspace
+!default.xcworkspace
+xcuserdata
+profile
+*.moved-aside
+DerivedData
+.idea/
+>>>>>>> 424cbc57778aee68ea9aacaf0ab8f9dca4486039
