@@ -1,13 +1,4 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
 /Write/Classes/Credentials.h
-/Write.xcodeproj/project.xcworkspace/xcuserdata/davidhbrunow.xcuserdatad/UserInterfaceState.xcuserstate
-/Write.xcodeproj/xcuserdata/davidhbrunow.xcuserdatad/xcdebugger/
-/Write.xcodeproj/project.pbxproj
-Write/Classes/Credentials.h
-=======
-=======
->>>>>>> f27611c5a6315f762e9e427d7b5edd9ff3422ad2
 # Xcode
 .DS_Store
 build/
@@ -26,7 +17,3 @@ profile
 *.moved-aside
 DerivedData
 .idea/
-<<<<<<< HEAD
->>>>>>> 424cbc57778aee68ea9aacaf0ab8f9dca4486039
-=======
->>>>>>> f27611c5a6315f762e9e427d7b5edd9ff3422ad2
