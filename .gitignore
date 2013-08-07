@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 /Write/Classes/Credentials.h
+=======
+>>>>>>> e032135f175ce44154eb6f6a9fd1acbf13cb2775
 # Xcode
 .DS_Store
 build/
@@ -16,4 +19,8 @@ xcuserdata
 profile
 *.moved-aside
 DerivedData
+<<<<<<< HEAD
 .idea/
+=======
+.idea/
+>>>>>>> e032135f175ce44154eb6f6a9fd1acbf13cb2775
