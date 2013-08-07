@@ -28,12 +28,16 @@
         [self.notificationLabel setTextAlignment:NSTextAlignmentCenter];
         [self.notificationLabel setFont:[UIFont fontWithName:@"HelveticaNeue-Bold" size:12]];
         [self.notificationLabel setText:@"Change this text"];
+        [self.notificationLabel setBackgroundColor:[UIColor orangeColor]];
     }
     return self;
 }
 
 - (void)layoutSubviews
 {
+    [self.notificationView setFrame:CGRectMake(0, -20, [[UIScreen mainScreen] bounds].size.width, 20)];
+    [self.notificationView setBackgroundColor:[UIColor orangeColor]];
+
     [self addSubview:self.notificationView];
     [self.notificationView addSubview:self.notificationLabel];
 }
@@ -47,8 +51,7 @@
     
     CGRect oldFrame = self.frame;
     
-    newFrame.origin.y = oldFrame.origin.y + 20;
-    
+    newFrame.origin.y = oldFrame.origin.y + 20;    
     
     [UIView animateWithDuration:0.25 animations:^{
         [self.notificationView setFrame:newFrame];

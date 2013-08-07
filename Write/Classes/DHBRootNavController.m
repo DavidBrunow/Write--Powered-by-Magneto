@@ -16,9 +16,7 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
     DHBAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
-    
-    [appDelegate.dropBox connectToDropBox];
-    
+        
     self.blogsViewController = [[DHBBlogViewController alloc] init];
     
     [self pushViewController:self.blogsViewController animated:YES];
@@ -30,6 +28,7 @@
 {
     [super viewDidAppear:animated];
     DHBAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+    [appDelegate.dropBox connectToDropBox];
 
     if(appDelegate.settings.blogs.count == 0) {
         self.blogListViewController = [[DHBViewController alloc] init];

@@ -55,8 +55,10 @@
     } else {
         [self setIsEditingPost:YES];
     }
-    
-    self.editBlogPost = [[UITextView alloc] initWithFrame:CGRectMake([[UIScreen mainScreen] bounds].origin.x, [[UIScreen mainScreen] bounds].origin.y, [[UIScreen mainScreen] bounds].size.width, [[UIScreen mainScreen] bounds].size.height - self.navigationController.navigationBar.frame.size.height - 20)];
+    //This works right in 7 but not in 6
+    //self.editBlogPost = [[UITextView alloc] initWithFrame:CGRectMake([[UIScreen mainScreen] bounds].origin.x, [[UIScreen mainScreen] bounds].origin.y, [[UIScreen mainScreen] bounds].size.width, [[UIScreen mainScreen] bounds].size.height - self.navigationController.navigationBar.frame.size.height - 20)];
+    self.editBlogPost = [[UITextView alloc] initWithFrame:CGRectMake([[UIScreen mainScreen] bounds].origin.x, [[UIScreen mainScreen] bounds].origin.y, [[UIScreen mainScreen] bounds].size.width, [[UIScreen mainScreen] bounds].size.height - 20)];
+
     [self.editBlogPost setDelegate:self];
     [self.editBlogPost setFont:[UIFont fontWithName:@"Courier" size:14.0]];
     [self.editBlogPost setContentSize:CGSizeMake([[UIScreen mainScreen] bounds].size.width - 20, [[UIScreen mainScreen] bounds].size.height)];
@@ -175,12 +177,15 @@
     }
 
     [textView scrollRangeToVisible:[textView selectedRange]];
-    if ([self.editBlogPost caretRectForPosition:self.editBlogPost.selectedTextRange.start].origin.y > [self.editBlogPost caretRectForPosition:self.editBlogPost.endOfDocument].origin.y - self.kbSize.height &&  [self.editBlogPost caretRectForPosition:self.editBlogPost.endOfDocument].origin.y - self.kbSize.height > 0) {
+    
+    if ([self.editBlogPost caretRectForPosition:self.editBlogPost.selectedTextRange.start].origin.y > ([self.editBlogPost caretRectForPosition:self.editBlogPost.endOfDocument].origin.y - self.editBlogPost.inputAccessoryView.frame.size.height - self.kbSize.height) && [self.editBlogPost caretRectForPosition:self.editBlogPost.endOfDocument].origin.y - self.kbSize.height > 0) {
+        NSLog(@"Selected Range Y: %f, Caret Y: %f, Caret Height: %f, InputAccessory Height: %f, Keyboard Height: %f", [self.editBlogPost caretRectForPosition:self.editBlogPost.selectedTextRange.start].origin.y, [self.editBlogPost caretRectForPosition:self.editBlogPost.endOfDocument].origin.y, + [self.editBlogPost caretRectForPosition:self.editBlogPost.endOfDocument].size.height, self.editBlogPost.inputAccessoryView.frame.size.height, self.kbSize.height);
         CGPoint scrollPoint = CGPointMake(0.0, [self.editBlogPost caretRectForPosition:self.editBlogPost.endOfDocument].origin.y + [self.editBlogPost caretRectForPosition:self.editBlogPost.endOfDocument].size.height + self.editBlogPost.inputAccessoryView.frame.size.height - self.kbSize.height);
         [UIView animateWithDuration:.25 animations:^{
             self.editBlogPost.contentOffset = scrollPoint;
         }];
-        //[self.editBlogPost setContentOffset:scrollPoint animated:NO];
+        //For some reason, setContentOffset: animated:YES does not work, so that is why the animation above
+        //[self.editBlogPost setContentOffset:scrollPoint animated:YES];
     }
 }
 
@@ -224,7 +229,8 @@
     if([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypePhotoLibrary]) {
         
         [self.imagePickerController setSourceType:UIImagePickerControllerSourceTypePhotoLibrary];
-        [self.imagePickerController setAllowsEditing:YES];
+        //Not allowing editing because that enforces a square crop on the images, and I don't want that. Future David will make a custom editing UI
+        //[self.imagePickerController setAllowsEditing:YES];
         self.imagePickerController.mediaTypes = [UIImagePickerController availableMediaTypesForSourceType:self.imagePickerController.sourceType];
         
         [self.imagePickerController setDelegate:self];

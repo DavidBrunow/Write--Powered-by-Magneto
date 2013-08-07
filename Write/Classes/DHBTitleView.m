@@ -19,7 +19,7 @@
         // Initialization code
         self.lblTitle = [[UILabel alloc] initWithFrame:CGRectMake(20, 60, self.frame.size.width - 40, 50)];
         self.txtTitle = [[UITextField alloc] initWithFrame:CGRectMake(20, 100, self.frame.size.width - 40, 50)];
-        self.btnFinish = [UIButton buttonWithType:UIButtonTypeSystem];
+        self.btnFinish = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     }
     
     return self;
@@ -39,8 +39,8 @@
     //[self.btnFinish setTitle:@"Create Draft" forState:UIControlStateNormal];
 
     [self addSubview:self.btnFinish];
-    [self addSubview:self.txtTitle];
     [self addSubview:self.lblTitle];
+    [self addSubview:self.txtTitle];
 }
 
 - (void)createPost

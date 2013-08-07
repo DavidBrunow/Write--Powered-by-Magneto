@@ -23,16 +23,16 @@
 
 -(void)layoutSubviews
 {
-    [self.signatureLabel setFrame:CGRectMake(0, 50, self.frame.size.width, 100)];
-    [self.signatureLabel setText:@"Designed and Developed in Texas by\n\nDavid Brunow\thttp:\\\\brunow.org"];
+    [self.signatureLabel setFrame:CGRectMake(0, 45, self.frame.size.width, 100)];
+    [self.signatureLabel setText:@"Designed and Developed in Texas by\nDavid Brunow\thttp:\\\\brunow.org"];
     [self.signatureLabel setNumberOfLines:0];
     [self.signatureLabel setFont:[UIFont fontWithName:@"HelveticaNeue" size:11.0]];
     [self.signatureLabel setTextAlignment:NSTextAlignmentCenter];
 
     [self.signatureImageView setFrame:CGRectMake((self.frame.size.width - 40) / 2, 30, 40, 40)];
-    
-    [self addSubview:self.signatureImageView];
+
     [self addSubview:self.signatureLabel];
+    [self addSubview:self.signatureImageView];
 }
 
 /*

@@ -78,7 +78,7 @@
                 }
             }
             
-            NSLog(@"Token: %@. Secret: %@. UserID: %@", oauthToken, oauthTokenSecret, userID);
+            //NSLog(@"Token: %@. Secret: %@. UserID: %@", oauthToken, oauthTokenSecret, userID);
             bool success = [SFHFKeychainUtils storeUsername:USER_NAME_TOKEN andPassword:oauthToken forServiceName:SERVICE_NAME updateExisting:TRUE error:nil];
             success = [SFHFKeychainUtils storeUsername:USER_NAME_TOKEN_SECRET andPassword:oauthTokenSecret forServiceName:SERVICE_NAME updateExisting:TRUE error:nil];
             success = [SFHFKeychainUtils storeUsername:USER_NAME_USER_NAME andPassword:userID forServiceName:SERVICE_NAME updateExisting:TRUE error:nil];

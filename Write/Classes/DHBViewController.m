@@ -22,7 +22,7 @@
 	// Do any additional setup after loading the view.
     CGRect tableViewFrame = [[UIScreen mainScreen] bounds];
     //if ([self.navigationController isNavigationBarHidden]) {
-    tableViewFrame.origin.y += 60;
+    //tableViewFrame.origin.y += 60;
     
     NSLog(@"Nav Bar Height: %f", self.navigationController.navigationBar.frame.size.height);
     
@@ -40,7 +40,7 @@
     //[self.blogsTableView setSeparatorColor:self.darkTextColor];
     [self.blogsTableView setDelegate:self];
     [self.blogsTableView setDataSource:self];
-    self.nextButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    self.nextButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     [self.nextButton addTarget:self action:@selector(loadMainView) forControlEvents:UIControlEventTouchUpInside];
     [self.nextButton setTitle:@"Next" forState:(UIControlStateNormal)];
     [self.nextButton setTitle:@"Next" forState:UIControlStateDisabled];
@@ -50,10 +50,14 @@
     }
     [self.nextButton setFrame:CGRectMake(self.view.frame.size.width - 100, self.view.frame.size.height - 100, 80, 40)];
     
-    self.cancelButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    self.cancelButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     [self.cancelButton addTarget:self action:@selector(dismissView) forControlEvents:UIControlEventTouchUpInside];
-    [self.cancelButton setTitle:@"Cancel" forState:(UIControlStateNormal)];
+    [self.cancelButton setTitle:@"Cancel" forState:UIControlStateNormal];
     [self.cancelButton setTitle:@"Cancel" forState:UIControlStateDisabled];
+    
+    if(appDelegate.settings.blogs.count == 0) {
+        [self.cancelButton setEnabled:NO];
+    }
     
     [self.cancelButton setFrame:CGRectMake(self.view.frame.size.width - 300, self.view.frame.size.height - 100, 80, 40)];
     
